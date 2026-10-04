@@ -1,10 +1,19 @@
-import { useState } from "react"
+import { useState , useEffect, use } from "react"
 import { createContext } from "react"
 
 export const favoriteContext = createContext()
 export default function FavoriteProvider({children}){
 
-    const [favorite , setFavorite] = useState([])
+    const [favorite , setFavorite] = useState(() => {
+        const saved = localStorage.getItem("favoriteList")
+        return saved ? JSON.parse(saved) : []
+    })
+
+    useEffect(() => {
+        localStorage.setItem("favoriteList" , JSON.stringify(favorite))
+    }, [favorite])
+
+
 
     const isInfavorite = (poke) => {
         return favorite.some(f => f.name === poke.name)

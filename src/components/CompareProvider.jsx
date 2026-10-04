@@ -1,9 +1,16 @@
-import { createContext } from "react"
+import { createContext, useEffect } from "react"
 import { useState } from "react"
 export const compareContext = createContext()
 export default function CompareProvider({children}){
 
-const [compare , setCompare] = useState([])
+const [compare , setCompare] = useState(() => {
+    const saved = localStorage.getItem("compareList")
+    return saved ? JSON.parse(saved) : []
+})
+
+useEffect(() => {
+    localStorage.getItem("whishList" , JSON.stringify(compare))
+}, [compare])
 
 const isInCompare = (poke) => {
     return compare.some(c => c.name === poke.name)
