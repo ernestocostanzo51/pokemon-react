@@ -49,7 +49,7 @@ export default function appHeader() {
                 className={`nav-link fw-semibold px-3 d-flex align-items-center gap-2 ${
                   location.pathname === "/favorite" ? "active text-warning" : ""
                 }`}
-                to="/favorites"
+                to="/favorite"
               >
                 <span>★ Preferiti</span>
                 <span className="badge rounded-pill bg-warning text-dark fw-bold">

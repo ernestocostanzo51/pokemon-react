@@ -1,12 +1,20 @@
-import { useContext } from "react"
+import { useContext , useMemo } from "react"
 import { favoriteContext } from "../components/FavoriteProvider"
 import { pokemonContext } from "../components/PokemonProvider"
+import { searchContext } from "../components/SearchProvider"
+
+
 import typeConfig from "../layout/TypePokemon"
 
 
 export default function FavoritePage() {
   const { favorite, removeFromFavorite } = useContext(favoriteContext)
   const { selectedPokemon } = useContext(pokemonContext)
+  const {search , setSearch} = useContext(searchContext)
+
+  const filtredPokemon = useMemo(() => {
+    return favorite.filter((poke) => poke.name.includes(search))
+  } , [favorite , search])
 
   return (
     <div className="container py-5">
@@ -18,10 +26,27 @@ export default function FavoritePage() {
             ? `Hai salvato ${favorite.length} Pokémon nei tuoi preferiti.`
             : "Nessun Pokémon salvato tra i preferiti."}
         </p>
+         <input
+          type="text"
+          className="form-control border-0 bg-white shadow-none ps-2 fs-6"
+          placeholder="Cerca Pokémon per nome..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        {search && (
+          <button 
+            className="btn btn-link text-secondary text-decoration-none pe-4"
+            onClick={() => setSearch("")}
+            type="button"
+          >
+            ✕
+          </button>
+        )}
+
       </header>
 
       {/* Caso: Lista Preferiti Vuota */}
-      {favorite.length === 0 ? (
+      {filtredPokemon.length === 0 ? (
         <div className="text-center py-5">
           <div className="card border-2 border-dashed bg-light p-5 rounded-4 max-w-md mx-auto">
             <h4 className="text-muted mb-3">La tua lista è vuota</h4>
@@ -33,7 +58,7 @@ export default function FavoritePage() {
       ) : (
         /* Griglia Pokémon Preferiti */
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-          {favorite.map((poke) => (
+          {filtredPokemon.map((poke) => (
             <div key={poke.name} className="col">
               <div className="card h-100 border-0 shadow-sm rounded-4 text-center p-3 hover-shadow transition">
                 

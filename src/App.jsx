@@ -13,8 +13,9 @@ function App() {
 
   return (
     <>
-    <FavoriteProvider>
-      <CompareProvider>
+    <SearchProvider>
+      <FavoriteProvider>
+    <CompareProvider>
     <PokemonProvider>
     <BrowserRouter>
     <Routes>
@@ -28,6 +29,8 @@ function App() {
     </PokemonProvider>
     </CompareProvider>
     </FavoriteProvider>
+    </SearchProvider>
+    
     
     
   
