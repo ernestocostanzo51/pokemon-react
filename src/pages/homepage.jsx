@@ -1,37 +1,22 @@
 import { useContext } from "react"
 import { pokemonContext } from "../components/PokemonProvider"
+import { favoriteContext } from "../components/FavoriteProvider"
+import { compareContext } from "../components/CompareProvider"
 
-
-const typeConfig = {
-  normal: { label: 'Normale', color: '#A8A878' },
-  fire: { label: 'Fuoco', color: '#F08030' },
-  water: { label: 'Acqua', color: '#6890F0' },
-  grass: { label: 'Erba', color: '#78C850' },
-  electric: { label: 'Elettro', color: '#F8D030' },
-  ice: { label: 'Ghiaccio', color: '#98D8D8' },
-  fighting: { label: 'Lotta', color: '#C03028' },
-  poison: { label: 'Veleno', color: '#A040A0' },
-  ground: { label: 'Terra', color: '#E0C068' },
-  flying: { label: 'Volante', color: '#A890F0' },
-  psychic: { label: 'Psico', color: '#F85888' },
-  bug: { label: 'Coleottero', color: '#A8B820' },
-  rock: { label: 'Roccia', color: '#B8A038' },
-  ghost: { label: 'Spettro', color: '#705898' },
-  dragon: { label: 'Drago', color: '#7038F8' },
-  dark: { label: 'Buio', color: '#705848' },
-  steel: { label: 'Acciaio', color: '#B8B8D0' },
-  fairy: { label: 'Folletto', color: '#EE99AC' },
-}
+import typeConfig from "../layout/TypePokemon"
 
 export default function PokemonApp() {
   const { pokemonsList, singlePokemon, selectedPokemon } = useContext(pokemonContext)
+  
+  
+  const { isInfavorite, addTofavorite, removeFromFavorite } = useContext(favoriteContext)
+  const { isInCompare, addToCompare, removeFromCompare, compare } = useContext(compareContext)
 
   return (
-    <div className="container py-5">
-      {/* Header */}
-      <header className="text-center mb-5">
-        <h1 className="display-4 fw-bold text-danger">Pokédex</h1>
-        <p className="text-muted">Seleziona un Pokémon per vederne le statistiche</p>
+    <div className="container mt-4">
+      
+      <header className="text-center">
+        <h1 className="display-5 fw-bold text-danger">Pokédex</h1>
       </header>
 
       <div className="row g-4">
@@ -80,6 +65,7 @@ export default function PokemonApp() {
                       singlePokemon.sprites?.other?.["official-artwork"]?.front_default ||
                       singlePokemon.sprites?.front_default
                     }
+                    alt={singlePokemon.name}
                     className="img-fluid"
                     style={{ maxHeight: "180px", objectFit: "contain" }}
                   />
@@ -90,7 +76,7 @@ export default function PokemonApp() {
                 <div className="d-flex justify-content-center gap-2 mb-4">
                   {singlePokemon.types?.map((t) => {
                     const typeName = t.type.name
-                    const config = typeConfig[typeName] 
+                    const config = typeConfig[typeName] || { label: typeName, color: '#68A090' }
 
                     return (
                       <span
@@ -105,7 +91,7 @@ export default function PokemonApp() {
                 </div>
 
                 {/* Statistiche Base */}
-                <div className="row g-2 pt-3 border-top">
+                <div className="row g-2 pt-3 border-top mb-4">
                   <div className="col-6">
                     <div className="bg-light p-3 rounded-3">
                       <small className="text-muted text-uppercase fw-bold d-block mb-1">
@@ -127,6 +113,45 @@ export default function PokemonApp() {
                     </div>
                   </div>
                 </div>
+
+                
+                <div className="d-flex gap-2">
+                  {/* Bottone Preferiti */}
+                  {isInfavorite(singlePokemon) ? (
+                    <button
+                      onClick={() => removeFromFavorite(singlePokemon)}
+                      className="btn btn-warning w-50 fw-semibold shadow-sm"
+                    >
+                      ★ Rimuovi Preferito
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => addTofavorite(singlePokemon)}
+                      className="btn btn-outline-warning text-dark w-50 fw-semibold shadow-sm"
+                    >
+                      ☆ Aggiungi Preferito
+                    </button>
+                  )}
+
+                  {/* Bottone Confronta */}
+                  {isInCompare(singlePokemon) ? (
+                    <button
+                      onClick={() => removeFromCompare(singlePokemon)}
+                      className="btn btn-info text-white w-50 fw-semibold shadow-sm"
+                    >
+                      ⇄ Rimuovi Confronto
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => addToCompare(singlePokemon)}
+                      disabled={compare.length >= 2}
+                      className="btn btn-outline-info text-dark w-50 fw-semibold shadow-sm"
+                    >
+                      {compare.length >= 2 ? "Confronto Pieno" : "⇄ Confronta"}
+                    </button>
+                  )}
+                </div>
+
               </div>
             ) : (
               <div className="card border-2 border-dashed bg-light text-center p-5 rounded-4 text-muted">

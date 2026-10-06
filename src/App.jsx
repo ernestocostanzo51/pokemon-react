@@ -1,26 +1,35 @@
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Homepage from './pages/homepage'
 import DefaultLayout from './layout/layouter'
-import PokemonSelected from './pages/pokemonSelected'
-
 import PokemonProvider from './components/PokemonProvider'
+import FavoriteProvider from './components/FavoriteProvider'
+import CompareProvider from './components/CompareProvider'
+import SearchProvider from './components/SearchProvider'
+import FavoritePage from './pages/FavoritePage'
+import ComparePage from './pages/ComparePage'
 
 function App() {
  
 
   return (
     <>
+    <FavoriteProvider>
+      <CompareProvider>
     <PokemonProvider>
-<BrowserRouter>
-  <Routes>
+    <BrowserRouter>
+    <Routes>
     <Route element={<DefaultLayout/>}>
-    <Route path='/' element={<Homepage/>}></Route>
-    <Route path='/pokemon/:name' element={<PokemonSelected/>}></Route>
+    <Route path='/' element={<Homepage/>}/>
+    <Route path='/favorite' element={<FavoritePage/>}/>
+    <Route path='/compare' element={<ComparePage/>}/>
     </Route>
-  </Routes>
-  </BrowserRouter>
-
+    </Routes>
+    </BrowserRouter>
     </PokemonProvider>
+    </CompareProvider>
+    </FavoriteProvider>
+    
+    
   
     </>
   )
